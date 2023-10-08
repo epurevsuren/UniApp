@@ -33,6 +33,7 @@ class Admin:
                 elif choice == "p":
                     Admin.partition_students()
                 elif choice == "r":
+                    # Needs to fixed
                     student_id = input("Remove by ID: ")
                     student = Database.find_student_by_id(student_id)
                     if student:

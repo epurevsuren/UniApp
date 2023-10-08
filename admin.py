@@ -79,21 +79,21 @@ class Admin:
             pass_students = []
             fail_students = []
             for student in students:
-                if student.calculate_grade() == "P":
-                    pass_students.append(student)
-                else:
+                if student.calculate_grade() == "Z":
                     fail_students.append(student)
+                else:
+                    pass_students.append(student)
 
             print("PASS")
             for student in pass_students:
                 print(
-                    f"{student.name} :: {student.id} --> GRADE: P - MARK: {student.calculate_average_mark():.2f}"
+                    f"{student.name} :: {student.id} --> GRADE: {student.calculate_grade()} - MARK: {student.calculate_average_mark():.2f}"
                 )
 
             print("FAIL")
             for student in fail_students:
                 print(
-                    f"{student.name} :: {student.id} --> GRADE: F - MARK: {student.calculate_average_mark():.2f}"
+                    f"{student.name} :: {student.id} --> GRADE: Z - MARK: {student.calculate_average_mark():.2f}"
                 )
         else:
             print("     < Nothing to display >")

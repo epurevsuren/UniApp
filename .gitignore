@@ -4,3 +4,6 @@
 # Ignore compiled Python files
 *.pyc
 __pycache__/
+
+# Ignore vscode settings
+.vscode/settings.json

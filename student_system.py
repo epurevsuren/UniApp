@@ -16,13 +16,7 @@ class StudentSystem:
                 )
                 choice = input().strip().lower()
                 if choice == "l":
-                    email = input("Email: ")
-                    password = input("Password: ")
-                    student = Database.find_student_by_email(email)
-                    if student and student.password == password:
-                        StudentCourseSystem.run(student)
-                    else:
-                        print(Colors.red("Invalid email or password"))
+                    StudentSystem.login_student()
                 elif choice == "r":
                     StudentSystem.register_student()
                 elif choice == "x":
@@ -31,6 +25,34 @@ class StudentSystem:
                     print("Invalid choice. Please try again.")
             except Exception as e:
                 print(f"An error occurred: {e}")
+
+    @staticmethod
+    def login_student():
+        print(Colors.bright_green("Student Sign In"))
+        while True:
+            email = input("Email: ")
+            password = input("Password: ")
+
+            if not Utils.is_valid_email(email):
+                print(Colors.red("Incorrect email or password format"))
+                continue
+
+            if not Utils.is_valid_password(password):
+                print(Colors.red("Incorrect email or password format"))
+                continue
+
+            print(Colors.yellow("email and password formats acceptable"))
+
+            student = Database.find_student_by_email(email)
+            if student is None:
+                print(Colors.red("Student does not exist"))
+                continue
+
+            if student and student.password == password:
+                StudentCourseSystem.run(student)
+                break
+            else:
+                print(Colors.red("Incorrect email or password format"))
 
     @staticmethod
     def register_student():

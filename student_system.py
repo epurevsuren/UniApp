@@ -22,7 +22,7 @@ class StudentSystem:
                     if student and student.password == password:
                         StudentCourseSystem.run(student)
                     else:
-                        print(Colors.red("Invalid email or password"))
+                        print(Colors.red("Incorrect email or password format"))
                 elif choice == "r":
                     StudentSystem.register_student()
                 elif choice == "x":

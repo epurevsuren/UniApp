@@ -60,7 +60,12 @@ class Database:
     @staticmethod
     def remove_student(student):
         students = Database.read_students_from_file()
-        students.remove(student)
+        for i, s in enumerate(students):
+            if s.id == student.id:
+                students.remove(s)
+                break
+        else:
+            students.remove(student)
         Database.write_students_to_file(students)
 
     @staticmethod

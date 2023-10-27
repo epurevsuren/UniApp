@@ -33,7 +33,6 @@ class Admin:
                 elif choice == "p":
                     Admin.partition_students()
                 elif choice == "r":
-                    # Needs to fixed
                     student_id = input("Remove by ID: ")
                     student = Database.find_student_by_id(student_id)
                     if student:
@@ -66,9 +65,9 @@ class Admin:
                 )
 
             for grade, students in grades.items():
-                print(f"GRADE: {grade}")
+                print(f"{grade}  ", end="")
                 for student_info in students:
-                    print("->", student_info)
+                    print("--> [" + student_info + "]")
         else:
             print("     < Nothing to display >")
 
@@ -85,17 +84,26 @@ class Admin:
                 else:
                     pass_students.append(student)
 
-            print("PASS")
-            for student in pass_students:
+            print("PASS --> [", end="")
+            for idx, student in enumerate(pass_students):
                 print(
-                    f"{student.name} :: {student.id} --> GRADE: {student.calculate_grade()} - MARK: {student.calculate_average_mark():.2f}"
+                    f"{student.name} :: {student.id} --> GRADE: {student.calculate_grade()} - MARK: {student.calculate_average_mark():.2f}",
+                    end="",
                 )
+                if idx != len(students) - 1:
+                    print(", ", end="")
+            print("]")
 
-            print("FAIL")
-            for student in fail_students:
+            print("FAIL --> [", end="")
+            for idx, student in enumerate(fail_students):
                 print(
-                    f"{student.name} :: {student.id} --> GRADE: Z - MARK: {student.calculate_average_mark():.2f}"
+                    f"{student.name} :: {student.id} --> GRADE: Z - MARK: {student.calculate_average_mark():.2f}",
+                    end="",
                 )
+                if idx != len(students) - 1:
+                    print(", ", end="")
+
+            print("]")
         else:
             print("     < Nothing to display >")
 

@@ -46,7 +46,7 @@ class StudentSystem:
             student = Database.find_student_by_email(email)
             if student is None:
                 print(Colors.red("Student does not exist"))
-                continue
+                break
 
             if student and student.password == password:
                 StudentCourseSystem.run(student)

@@ -46,10 +46,12 @@ class LoginFrame(tk.LabelFrame):
             self.clear()
             return
 
-        student = db.find_student_by_email(self.emailText.get())
+        student = db.match(self.emailText.get(), self.passwordTxt.get())
+
         if student != None:
             info = f"Welcome {student.name}"
-            ConfirmationView(master, info)
+            EnrollmentWindow(master, student)
+            # ConfirmationView(master, info)
             # Controller.save(student.name)
             self.clear()
         else:
@@ -115,3 +117,83 @@ class LoginFrame(tk.LabelFrame):
             command=lambda: master.quit(),
         )
         self.cancelBtn.grid(column=1, row=3, sticky=tk.W, padx=5, pady=5)
+
+
+class EnrollmentWindow(tk.Toplevel):
+    def __init__(self, master, model):
+        super().__init__(master=master)
+
+        self.title("GUIUniApp - Enrollment")
+        self.geometry("300x200")
+        x = master.winfo_x()
+        y = master.winfo_y()
+        self.geometry("+%d+%d" % (x + 300, y))
+        self.configure(bg="#607b8d")
+        self.resizable(False, False)
+
+        label = tk.Label(
+            self,
+            text=f"Welcome {model.name} \n Press button to enroll in subjects",
+            fg="#ffc107",
+            font="Helvetica 12 bold",
+            bg="#607b8d",
+        )
+        label.place(relx=0.5, rely=0.5, anchor="center")
+
+        enrollBtn = tk.Button(
+            self,
+            text="Enroll",
+            bg="#252525",
+            fg="#ffc107",
+            font="Helvetica 10 bold",
+            command=lambda: self.enroll(master, model),
+        )
+        enrollBtn.pack(padx=5, pady=5, side="bottom")
+
+    def enroll(self, master, model):
+        if len(model.subjects) < 4:
+            subject = Subject()
+            model.subjects.append(subject)
+            SubjectWindow(master, model)
+        else:
+            info = "Students are allowed to enroll in 4 subjects only"
+            mb.showerror(title="Enroll Error", message=info)
+
+
+# need to fix the enroll button logic >> add subject to the list
+
+
+class SubjectWindow(tk.Toplevel):
+    def __init__(self, master, model):
+        super().__init__(master=master)
+        self.title("GUIUniApp - Subject List")
+        self.geometry("300x300")
+        x = master.winfo_x()
+        y = master.winfo_y()
+        self.geometry("+%d+%d" % (x + 600, y))
+        self.configure(bg="#607b8d")
+        self.resizable(False, False)
+
+        # listVar = tk.Variable(value=model.subjects.id)
+        # subjectList = tk.Listbox(master,listvariable=listVar)
+        # subjectList.pack(fill=tk.BOTH,expand=True,padx=20,pady=40)
+        abc = model.show_subjects()
+
+        subjectList = tk.Label(
+            self, text=f"{abc}", font="Helvetica 12 bold", bg="#607b8d"
+        )
+        subjectList.place(relx=0.5, rely=0.5, anchor="center")
+
+        closeBtn = tk.Button(
+            self,
+            text="Close",
+            bg="#252525",
+            fg="#ffc107",
+            font="Helvetica 12 bold",
+            command=lambda: self.destroy(),
+        )
+        closeBtn.pack(padx=5, pady=20, side="bottom")
+
+
+class ExceptionWindow:
+    pass

@@ -78,3 +78,11 @@ class Database:
         else:
             students.append(student)
         Database.write_students_to_file(students)
+
+    @staticmethod
+    def match(email, password):
+        students = Database.read_students_from_file()
+        for student in students:
+            if student.email == email and student.password == password:
+                return student
+        return None

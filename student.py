@@ -17,24 +17,15 @@ class Student:
         self.password = new_password
 
     def enroll_subject(self, subject):
-        if len(self.subjects) < 4:
-            self.subjects.append(subject)
-        else:
-            print(Colors.red("Students are allowed to enroll in 4 subjects only"))
+        self.subjects.append(subject)
 
     def remove_subject(self, subject_id):
         for subject in self.subjects:
             if subject.id == subject_id:
                 self.subjects.remove(subject)
-                print(Colors.yellow(f"Dropping Subject-{subject_id}"))
-                print(
-                    Colors.yellow(
-                        f"You are now enrolled in {len(self.subjects)} out of 4 subjects"
-                    )
-                )
-                break
+                return True
         else:
-            print(Colors.red(f"Subject {subject_id} not found in enrolled subjects"))
+            return False
 
     def calculate_average_mark(self):
         total_marks = sum(subject.mark for subject in self.subjects)

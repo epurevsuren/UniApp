@@ -1,6 +1,6 @@
-from subject import Subject
 from colors import Colors
-from database import Database
+from student_controller import StudentController
+from subject_controller import SubjectController
 
 
 class StudentCourseSystem:
@@ -18,23 +18,21 @@ class StudentCourseSystem:
                     while True:
                         confirm_password = input("Confirm Password: ")
                         if new_password == confirm_password:
-                            student.change_password(new_password)
+                            StudentController.changePassword(student, new_password)
                             print("Password updated successfully.")
-                            Database.update_student(student)  # Update student
                             break
                         else:
                             print(Colors.red("Password does not match - try again"))
                 elif choice == "e":
-                    if len(student.subjects) < 4:
-                        subject = Subject()
-                        student.enroll_subject(subject)
+                    subject = SubjectController.createSubject()
+                    if SubjectController.checkLimit(student):
                         print(Colors.yellow(f"Enrolling in Subject-{subject.id}"))
+                        SubjectController.enrollSubject(student, subject)
                         print(
                             Colors.yellow(
                                 f"You are now enrolled in {len(student.subjects)} out of 4 subjects"
                             )
                         )
-                        Database.update_student(student)  # Update student
                     else:
                         print(
                             Colors.red(
@@ -43,8 +41,19 @@ class StudentCourseSystem:
                         )
                 elif choice == "r":
                     subject_id = input("Remove Subject by ID: ")
-                    student.remove_subject(subject_id)
-                    Database.update_student(student)  # Update student
+                    print(Colors.yellow(f"Dropping Subject-{subject_id}"))
+                    if SubjectController.removeSubject(student, subject_id):
+                        print(
+                            Colors.yellow(
+                                f"You are now enrolled in {len(student.subjects)} out of 4 subjects"
+                            )
+                        )
+                    else:
+                        print(
+                            Colors.red(
+                                f"Subject {subject_id} not found in enrolled subjects"
+                            )
+                        )
                 elif choice == "s":
                     print(Colors.yellow(f"Showing {len(student.subjects)} subjects"))
                     for subject in student.subjects:

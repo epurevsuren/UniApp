@@ -1,7 +1,5 @@
-from database import Database
 from student_course_system import StudentCourseSystem
-from student import Student
-from utils import Utils
+from student_controller import StudentController
 from colors import Colors
 
 
@@ -33,22 +31,18 @@ class StudentSystem:
             email = input("Email: ")
             password = input("Password: ")
 
-            if not Utils.is_valid_email(email):
+            if StudentController.checkFormat(email, password):
+                print(Colors.yellow("email and password formats acceptable"))
+            else:
                 print(Colors.red("Incorrect email or password format"))
                 continue
 
-            if not Utils.is_valid_password(password):
-                print(Colors.red("Incorrect email or password format"))
-                continue
-
-            print(Colors.yellow("email and password formats acceptable"))
-
-            student = Database.find_student_by_email(email)
+            student = StudentController.checkExist(email)
             if student is None:
                 print(Colors.red("Student does not exist"))
                 break
 
-            if student and student.password == password:
+            if StudentController.login(email, password) is not None:
                 StudentCourseSystem.run(student)
                 break
             else:
@@ -62,24 +56,19 @@ class StudentSystem:
                 email = input("Email: ")
                 password = input("Password: ")
 
-                if not Utils.is_valid_email(email):
+                if StudentController.checkFormat(email, password):
+                    print(Colors.yellow("email and password formats acceptable"))
+                else:
                     print(Colors.red("Incorrect email or password format"))
                     continue
 
-                if not Utils.is_valid_password(password):
-                    print(Colors.red("Incorrect email or password format"))
-                    continue
-
-                print(Colors.yellow("email and password formats acceptable"))
-
-                student = Database.find_student_by_email(email)
+                student = StudentController.checkExist(email)
                 if student is not None:
                     print(Colors.red(f"Student {student.name} already exists"))
                     continue
 
                 name = input("Name: ")
-                student = Student(name, email, password)
-                Database.add_student(student)
+                StudentController.addStudent(name, email, password)
                 print(Colors.yellow(f"Enrolling Student {name}"))
                 break
             except Exception as e:

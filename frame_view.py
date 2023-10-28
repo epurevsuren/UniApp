@@ -1,5 +1,7 @@
 # from controller import Controller
 from utils import Utils
+from student_controller import StudentController
+from subject_controller import SubjectController
 import tkinter as tk
 import tkinter.messagebox as mb
 
@@ -34,19 +36,16 @@ class LoginFrame(tk.LabelFrame):
         self.emailField.delete(0, tk.END)
         self.passwordField.delete(0, tk.END)
 
-    def login(self, master, db):
+    def login(self, master, model):
         validationMsg = "Incorrect email or password format"
-        if not Utils.is_valid_email(self.emailText.get()):
+        if not StudentController.checkFormat(
+            self.emailText.get(), self.passwordTxt.get()
+        ):
             mb.showerror(title="Login Error", message=validationMsg)
             self.clear()
             return
 
-        if not Utils.is_valid_password(self.passwordTxt.get()):
-            mb.showerror(title="Login Error", message=validationMsg)
-            self.clear()
-            return
-
-        student = db.match(self.emailText.get(), self.passwordTxt.get())
+        student = model.match(self.emailText.get(), self.passwordTxt.get())
 
         if student != None:
             info = f"Welcome {student.name}"
@@ -59,7 +58,7 @@ class LoginFrame(tk.LabelFrame):
             mb.showerror(title="Login Error", message=info)
             self.clear()
 
-    def __init__(self, master, db) -> None:
+    def __init__(self, master, model) -> None:
         super().__init__(master)
         box = tk.LabelFrame(
             master,
@@ -104,7 +103,7 @@ class LoginFrame(tk.LabelFrame):
             bg="#252525",
             fg="#ffc107",
             font="Helvetica 10 bold",
-            command=lambda: self.login(master, db),
+            command=lambda: self.login(master, model),
         )
         self.loginBtn.grid(column=1, row=3, sticky=tk.E, padx=5, pady=5)
 
@@ -151,9 +150,9 @@ class EnrollmentWindow(tk.Toplevel):
         enrollBtn.pack(padx=5, pady=5, side="bottom")
 
     def enroll(self, master, model):
-        if len(model.subjects) < 4:
-            subject = Subject()
-            model.subjects.append(subject)
+        if SubjectController.checkLimit(model):
+            subject = SubjectController.createSubject()
+            SubjectController.enrollSubject(model, subject)
             SubjectWindow(master, model)
         else:
             info = "Students are allowed to enroll in 4 subjects only"

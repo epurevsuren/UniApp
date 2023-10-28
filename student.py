@@ -21,6 +21,8 @@ class Student:
             self.subjects.append(subject)
         else:
             print(Colors.red("Students are allowed to enroll in 4 subjects only"))
+          
+
 
     def remove_subject(self, subject_id):
         for subject in self.subjects:
@@ -53,3 +55,15 @@ class Student:
             if mark >= 50
             else "Z"
         )
+
+    def show_subjects(self):
+        if not self.subjects:
+            return ("You are not enrolled in any subjects.")
+        else:
+            result_string = ""
+            for subject in self.subjects:
+                result_string += "Subject ID :" + str(subject.id) + "\n"
+
+            return (f"You are now enrolled in {len(self.subjects)} out of 4 subjects\n{result_string}")
+        
+            

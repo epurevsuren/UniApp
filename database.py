@@ -5,6 +5,9 @@ import pickle
 class Database:
     FILENAME = "students.data"
 
+    def __init__(self):
+        pass
+
     @staticmethod
     def check_file_existence():
         return os.path.exists(Database.FILENAME)
@@ -78,3 +81,19 @@ class Database:
         else:
             students.append(student)
         Database.write_students_to_file(students)
+        
+    # def match(self, email, passord):
+    #     for user in self.users:
+    #         if user.match(email, passord):
+    #             return user
+    #     return None
+
+
+    def match(self, email, password):
+        students = Database.read_students_from_file()
+        for student in students:
+            if student.email == email and student.password == password:
+                return student
+        return None
+
+

@@ -1,10 +1,6 @@
-# from controller import Controller
-from utils import Utils
-from student_controller import StudentController
 from subject_controller import SubjectController
 import tkinter as tk
 import tkinter.messagebox as mb
-
 
 
 class LoginFrame(tk.LabelFrame):
@@ -14,20 +10,16 @@ class LoginFrame(tk.LabelFrame):
 
     def login(self, master, model):
         validationMsg = "Incorrect email or password format"
-        if not StudentController.checkFormat(
-            self.emailText.get(), self.passwordTxt.get()
-        ):
+        if not model.checkFormat(self.emailText.get(), self.passwordTxt.get()):
             mb.showerror(title="Login Error", message=validationMsg)
             self.clear()
             return
 
-        student = model.match(self.emailText.get(), self.passwordTxt.get())
+        student = model.login(self.emailText.get(), self.passwordTxt.get())
 
         if student != None:
             info = f"Welcome {student.name}"
             EnrollmentWindow(master, student)
-            # ConfirmationView(master, info)
-            # Controller.save(student.name)
             self.clear()
         else:
             info = "Student does not exist"
@@ -99,49 +91,66 @@ class EnrollmentWindow(tk.Toplevel):
         super().__init__(master=master)
 
         self.title("GUIUniApp - Enrollment")
-        self.geometry("300x200")
+        self.geometry("400x300")
         x = master.winfo_x()
         y = master.winfo_y()
         self.geometry("+%d+%d" % (x + 300, y))
         self.configure(bg="#607b8d")
         self.resizable(False, False)
 
-
-        # enrolled subjects label & listbox 
-        enrollLbl = tk.Label(self, text="Enrolled subjects", justify='left', fg='#ffc107',
-                                 font='Helvetica 12 bold', bg='#607b8d')
+        # enrolled subjects label & listbox
+        enrollLbl = tk.Label(
+            self,
+            text="Enrolled subjects",
+            justify="left",
+            fg="#ffc107",
+            font="Helvetica 12 bold",
+            bg="#607b8d",
+        )
         enrollLbl.grid(column=0, row=0, padx=5, pady=5, sticky=tk.W)
 
-        enroll_subjects= ["a", "b", "c"]
+        enroll_subjects = ["a", "b", "c"]
         enrolllistVar = tk.Variable(value=enroll_subjects)
-        enrollList = tk.Listbox(self,listvariable=enrolllistVar)
+        enrollList = tk.Listbox(self, listvariable=enrolllistVar)
         enrollList.grid(column=0, row=1, padx=5, pady=5)
-  
 
         # all subjects label & listbox
-        allsubjectLbl = tk.Label(self, text="All subjects", justify='left', fg='#ffc107',
-                                 font='Helvetica 12 bold', bg='#607b8d')
+        allsubjectLbl = tk.Label(
+            self,
+            text="All subjects",
+            justify="left",
+            fg="#ffc107",
+            font="Helvetica 12 bold",
+            bg="#607b8d",
+        )
         allsubjectLbl.grid(column=1, row=0, padx=5, pady=5, sticky=tk.W)
 
         all_subjects = ["d", "e", "f"]
         listVar = tk.Variable(value=all_subjects)
-        allList = tk.Listbox(self,listvariable=listVar)
+        allList = tk.Listbox(self, listvariable=listVar)
         allList.grid(column=1, row=1, padx=5, pady=5)
-    
 
         # enroll button
-        enrollBtn = tk.Button(self, text="Enroll", 
-                             bg='#252525', fg='#ffc107',
-                             font='Helvetica 10 bold',
-                             command=lambda: self.enroll(master,model))
+        enrollBtn = tk.Button(
+            self,
+            text="Enroll",
+            bg="#252525",
+            fg="#ffc107",
+            font="Helvetica 10 bold",
+            command=lambda: self.enroll(master, model),
+        )
         enrollBtn.grid(column=0, row=2, columnspan=2, padx=5, pady=5)
 
         # remove subject button
-        removeBtn = tk.Button(self, text="Remove", 
-                             bg='#252525', fg='#ffc107',
-                             font='Helvetica 10 bold',
-                             command=lambda: self.remove(master,model))
-        removeBtn.grid(column=0, row=3, columnspan=2, padx=5, pady=5)           
+        removeBtn = tk.Button(
+            self,
+            text="Remove",
+            bg="#252525",
+            fg="#ffc107",
+            font="Helvetica 10 bold",
+            command=lambda: self.remove(master, model),
+        )
+        removeBtn.grid(column=0, row=3, columnspan=2, padx=5, pady=5)
 
     # please help complete the enrol and remove logic
     def enroll(self, master, model):
@@ -154,7 +163,7 @@ class EnrollmentWindow(tk.Toplevel):
             mb.showerror(title="Enroll Error", message=info)
 
     def remove(self, master, model):
-        pass        
+        pass
 
 
 class SubjectWindow(tk.Toplevel):
@@ -167,7 +176,6 @@ class SubjectWindow(tk.Toplevel):
         self.geometry("+%d+%d" % (x + 600, y))
         self.configure(bg="#607b8d")
         self.resizable(False, False)
-
 
         abc = model.show_subjects()
 

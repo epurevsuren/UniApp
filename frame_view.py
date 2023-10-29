@@ -90,7 +90,8 @@ class EnrollmentWindow(tk.Toplevel):
     def __init__(self, master, model):
         super().__init__(master=master)
 
-        self.title("GUIUniApp - Enrollment")
+        info = f"of {model.name}!"
+        self.title("Enrollment " + info)
         self.geometry("400x300")
         x = master.winfo_x()
         y = master.winfo_y()
@@ -109,10 +110,13 @@ class EnrollmentWindow(tk.Toplevel):
         )
         enrollLbl.grid(column=0, row=0, padx=5, pady=5, sticky=tk.W)
 
-        enroll_subjects = ["a", "b", "c"]
-        enrolllistVar = tk.Variable(value=enroll_subjects)
-        enrollList = tk.Listbox(self, listvariable=enrolllistVar)
-        enrollList.grid(column=0, row=1, padx=5, pady=5)
+        enrolled_subjects = SubjectController.enrolledSubjects(model)
+
+        enrolllistVar = tk.Variable(value=enrolled_subjects)
+        enrolledList = tk.Listbox(
+            self, listvariable=enrolllistVar, selectmode=tk.SINGLE
+        )
+        enrolledList.grid(column=0, row=1, padx=5, pady=5)
 
         # all subjects label & listbox
         allsubjectLbl = tk.Label(
@@ -125,9 +129,10 @@ class EnrollmentWindow(tk.Toplevel):
         )
         allsubjectLbl.grid(column=1, row=0, padx=5, pady=5, sticky=tk.W)
 
-        all_subjects = ["d", "e", "f"]
+        all_subjects = SubjectController.getAllSubjects()
         listVar = tk.Variable(value=all_subjects)
-        allList = tk.Listbox(self, listvariable=listVar)
+        allList = tk.Listbox(self, listvariable=listVar, selectmode=tk.SINGLE)
+        allList.select_set(0)
         allList.grid(column=1, row=1, padx=5, pady=5)
 
         # enroll button
@@ -137,7 +142,7 @@ class EnrollmentWindow(tk.Toplevel):
             bg="#252525",
             fg="#ffc107",
             font="Helvetica 10 bold",
-            command=lambda: self.enroll(master, model),
+            command=lambda: self.enroll(master, model, allList, enrolledList),
         )
         enrollBtn.grid(column=0, row=2, columnspan=2, padx=5, pady=5)
 
@@ -148,22 +153,50 @@ class EnrollmentWindow(tk.Toplevel):
             bg="#252525",
             fg="#ffc107",
             font="Helvetica 10 bold",
-            command=lambda: self.remove(master, model),
+            command=lambda: self.remove(master, model, allList, enrolledList),
         )
         removeBtn.grid(column=0, row=3, columnspan=2, padx=5, pady=5)
 
-    # please help complete the enrol and remove logic
-    def enroll(self, master, model):
+    def enroll(self, master, model, allList, enrolledList):
         if SubjectController.checkLimit(model):
-            subject = SubjectController.createSubject()
-            SubjectController.enrollSubject(model, subject)
-            SubjectWindow(master, model)
+            if allList.curselection():
+                idx = allList.curselection()
+                temp = allList.get(idx)
+                answer = mb.askyesno(
+                    title="confirmation",
+                    message=f"Are you sure that you want to enroll {temp}?",
+                )
+                if answer:
+                    allList.delete(idx)
+                    enrolledList.insert("end", temp)
+                    splitString = temp.split("-")
+                    subjectID = splitString[-1]
+                    subject = SubjectController.createSubjectCustomID(subjectID)
+                    SubjectController.enrollSubject(model, subject)
+            else:
+                info = "Please select from all subject then enroll!"
+                mb.showerror(title="Enroll Error", message=info)
         else:
             info = "Students are allowed to enroll in 4 subjects only"
             mb.showerror(title="Enroll Error", message=info)
 
-    def remove(self, master, model):
-        pass
+    def remove(self, master, model, allList, enrolledList):
+        if enrolledList.curselection():
+            idx = enrolledList.curselection()
+            temp = enrolledList.get(idx)
+            answer = mb.askyesno(
+                title="confirmation",
+                message=f"Are you sure that you want to remove {temp}?",
+            )
+            if answer:
+                enrolledList.delete(idx)
+                allList.insert("end", temp)
+                splitString = temp.split("-")
+                subjectID = splitString[-1]
+                SubjectController.removeSubject(model, subjectID)
+        else:
+            info = "Please select enrolled subject then remove!"
+            mb.showerror(title="Remove Error", message=info)
 
 
 class SubjectWindow(tk.Toplevel):

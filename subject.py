@@ -2,8 +2,8 @@ import random
 
 
 class Subject:
-    def __init__(self):
-        self.id = self.generate_subject_id()
+    def __init__(self, subject_id=None):
+        self.id = subject_id if subject_id is not None else self.generate_subject_id()
         self.mark = random.randint(25, 100)
         self.grade = self.calculate_grade()
 

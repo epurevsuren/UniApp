@@ -26,6 +26,7 @@ class StudentController:
         student = Student(name, email, password)
         Database.add_student(student)
 
+    @staticmethod
     def changePassword(student, newPassword):
         student.change_password(newPassword)
         Database.update_student(student)  # Update student

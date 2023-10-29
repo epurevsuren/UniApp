@@ -90,7 +90,7 @@ class Admin:
                     f"{student.name} :: {student.id} --> GRADE: {student.calculate_grade()} - MARK: {student.calculate_average_mark():.2f}",
                     end="",
                 )
-                if idx != len(students) - 1:
+                if idx != len(pass_students) - 1:
                     print(", ", end="")
             print("]")
 
@@ -100,7 +100,7 @@ class Admin:
                     f"{student.name} :: {student.id} --> GRADE: Z - MARK: {student.calculate_average_mark():.2f}",
                     end="",
                 )
-                if idx != len(students) - 1:
+                if idx != len(fail_students) - 1:
                     print(", ", end="")
 
             print("]")

@@ -1,7 +1,7 @@
 import re
 
 # Constants
-EMAIL_REGEX = r"^[a-zA-Z0-9_.+-]{6,}+@university\.com$"
+EMAIL_REGEX = r"^[a-zA-Z0-9_.+-]+@university\.com$"
 PASSWORD_REGEX = r"^(?=.*[A-Z])(?=.*\d).{6,}$"
 
 

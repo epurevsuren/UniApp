@@ -28,5 +28,9 @@ class StudentController:
 
     @staticmethod
     def changePassword(student, newPassword):
-        student.change_password(newPassword)
-        Database.update_student(student)  # Update student
+        if Utils.is_valid_password(newPassword):
+            student.change_password(newPassword)
+            Database.update_student(student)  # Update student
+            return True
+        else:
+            return False

@@ -18,8 +18,10 @@ class StudentCourseSystem:
                     while True:
                         confirm_password = input("Confirm Password: ")
                         if new_password == confirm_password:
-                            StudentController.changePassword(student, new_password)
-                            print("Password updated successfully.")
+                            if StudentController.changePassword(student, new_password):
+                                print("Password updated successfully.")
+                            else:
+                                print(Colors.red("Incorrect password format"))
                             break
                         else:
                             print(Colors.red("Password does not match - try again"))

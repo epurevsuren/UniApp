@@ -1,4 +1,3 @@
-from colors import Colors
 import random
 
 

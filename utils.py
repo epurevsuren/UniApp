@@ -2,7 +2,7 @@ import re
 
 # Constants
 EMAIL_REGEX = r"^[a-zA-Z0-9_.+-]+@university\.com$"
-PASSWORD_REGEX = r"^(?=.*[A-Z])(?=.*\d).{6,}$"
+PASS_REGEX = r"^[A-Z].{5,}[0-9]{3,}$"
 
 
 class Utils:
@@ -12,4 +12,4 @@ class Utils:
 
     @staticmethod
     def is_valid_password(password):
-        return re.match(PASSWORD_REGEX, password)
+        return re.match(PASS_REGEX, password)

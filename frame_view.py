@@ -1,5 +1,6 @@
 from subject_controller import SubjectController
 import tkinter as tk
+from tkinter import ttk
 import tkinter.messagebox as mb
 
 
@@ -92,7 +93,7 @@ class EnrollmentWindow(tk.Toplevel):
 
         info = f"of {model.name}!"
         self.title("Enrollment " + info)
-        self.geometry("400x300")
+        self.geometry("400x330")
         x = master.winfo_x()
         y = master.winfo_y()
         self.geometry("+%d+%d" % (x + 300, y))
@@ -157,6 +158,17 @@ class EnrollmentWindow(tk.Toplevel):
         )
         removeBtn.grid(column=0, row=3, columnspan=2, padx=5, pady=5)
 
+        # subject window button
+        subjectBtn = tk.Button(
+            self,
+            text="Subject Window",
+            bg="#252525",
+            fg="#ffc107",
+            font="Helvetica 10 bold",
+            command=lambda: self.subjectWindow(master, model),
+        )
+        subjectBtn.grid(column=0, row=4, columnspan=2, padx=5, pady=5)
+
     def enroll(self, master, model, allList, enrolledList):
         if SubjectController.checkLimit(model):
             if allList.curselection():
@@ -198,24 +210,48 @@ class EnrollmentWindow(tk.Toplevel):
             info = "Please select enrolled subject then remove!"
             mb.showerror(title="Remove Error", message=info)
 
+    def subjectWindow(self, master, model):
+        SubjectWindow(master, model)
+
 
 class SubjectWindow(tk.Toplevel):
     def __init__(self, master, model):
         super().__init__(master=master)
         self.title("GUIUniApp - Subject List")
-        self.geometry("300x300")
+        self.geometry("620x300")
         x = master.winfo_x()
         y = master.winfo_y()
         self.geometry("+%d+%d" % (x + 600, y))
         self.configure(bg="#607b8d")
         self.resizable(False, False)
 
-        abc = model.show_subjects()
+        currentStudent = model.name
 
-        subjectList = tk.Label(
-            self, text=f"{abc}", font="Helvetica 12 bold", bg="#607b8d"
+        studentName = tk.Label(
+            self,
+            text=f"Student: {currentStudent}",
+            font="Helvetica 12 bold",
+            bg="#607b8d",
         )
-        subjectList.place(relx=0.5, rely=0.5, anchor="center")
+        studentName.grid(padx=0.5, pady=0.5, column=0, row=2)
+
+        columns = ("subject", "mark", "grade")
+        enrolledTree = ttk.Treeview(self, columns=columns, show="headings")
+        enrolledTree.heading("subject", text="Subject")
+        enrolledTree.heading("mark", text="Mark")
+        enrolledTree.heading("grade", text="Grade")
+        enrolledTree.grid(column=0, row=0, sticky="new")
+
+        enrolledSubjects = []
+        for subject in model.subjects:
+            print(
+                enrolledSubjects.append(
+                    (f"Subject-{subject.id}", f"{subject.mark}", f"{subject.grade}")
+                )
+            )
+
+        for subject in enrolledSubjects:
+            enrolledTree.insert("", tk.END, values=subject)
 
         closeBtn = tk.Button(
             self,
@@ -225,7 +261,7 @@ class SubjectWindow(tk.Toplevel):
             font="Helvetica 12 bold",
             command=lambda: self.destroy(),
         )
-        closeBtn.pack(padx=5, pady=20, side="bottom")
+        closeBtn.grid(column=0, row=3, padx=5, pady=20)
 
 
 class ExceptionWindow:

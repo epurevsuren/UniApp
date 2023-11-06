@@ -60,7 +60,7 @@ class StudentCourseSystem:
                     print(Colors.yellow(f"Showing {len(student.subjects)} subjects"))
                     for subject in student.subjects:
                         print(
-                            f"[ Subject::{subject.id} -- mark = {subject.mark} -- grade = {subject.grade: >4} ]"
+                            f"[ Subject::{subject.id} -- mark = {subject.mark} -- grade = {subject.grade: >4} ]"  # Filling spaces 4 times
                         )
                 elif choice == "x":
                     break

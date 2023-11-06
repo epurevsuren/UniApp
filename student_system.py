@@ -46,7 +46,7 @@ class StudentSystem:
                 StudentCourseSystem.run(student)
                 break
             else:
-                print(Colors.red("Incorrect email or password format"))
+                print(Colors.red("Incorrect password"))
 
     @staticmethod
     def register_student():
